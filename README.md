@@ -1,12 +1,12 @@
 ---
 title: CLIP Interrogator
-emoji: 📚
-colorFrom: indigo
+emoji: 🕵️‍♂️
+colorFrom: yellow
 colorTo: gray
 sdk: gradio
 sdk_version: 3.3.1
 app_file: app.py
-pinned: false
+pinned: true
 license: mit
 ---
 
