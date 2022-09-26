@@ -57,7 +57,7 @@ class LabelTable():
             self.embeds = []
             chunks = np.array_split(self.labels, max(1, len(self.labels)/chunk_size))
             for chunk in tqdm(chunks, desc=f"Preprocessing {desc}" if desc else None):
-                text_tokens = clip.tokenize(chunk).cuda()
+                text_tokens = clip.tokenize(chunk).to(device)
                 with torch.no_grad():
                     text_features = clip_model.encode_text(text_tokens).float()
                 text_features /= text_features.norm(dim=-1, keepdim=True)
@@ -113,7 +113,7 @@ def load_list(filename):
     return items
 
 def rank_top(image_features, text_array):
-    text_tokens = clip.tokenize([text for text in text_array]).cuda()
+    text_tokens = clip.tokenize([text for text in text_array]).to(device)
     with torch.no_grad():
         text_features = clip_model.encode_text(text_tokens).float()
     text_features /= text_features.norm(dim=-1, keepdim=True)
@@ -126,7 +126,7 @@ def rank_top(image_features, text_array):
     return text_array[top_labels[0][0].numpy()]
 
 def similarity(image_features, text):
-    text_tokens = clip.tokenize([text]).cuda()
+    text_tokens = clip.tokenize([text]).to(device)
     with torch.no_grad():
         text_features = clip_model.encode_text(text_tokens).float()       
     text_features /= text_features.norm(dim=-1, keepdim=True)
@@ -136,7 +136,7 @@ def similarity(image_features, text):
 def interrogate(image):
     caption = generate_caption(image)
 
-    images = clip_preprocess(image).unsqueeze(0).cuda()
+    images = clip_preprocess(image).unsqueeze(0).to(device)
     with torch.no_grad():
         image_features = clip_model.encode_image(images).float()
     image_features /= image_features.norm(dim=-1, keepdim=True)
