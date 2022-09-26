@@ -1,0 +1,9 @@
+fairscale
+ftfy
+Pillow
+timm
+torch
+torchvision
+transformers==4.21.2
+-e git+https://github.com/openai/CLIP.git@main#egg=clip
+-e git+https://github.com/salesforce/BLIP.git@main#egg=blip
