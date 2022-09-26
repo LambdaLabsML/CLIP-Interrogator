@@ -5,14 +5,10 @@ sys.path.append('src/clip')
 import clip
 import gradio as gr
 import hashlib
-import io
-import IPython
-import ipywidgets as widgets
 import math
 import numpy as np
 import os
 import pickle
-import requests
 import torch
 import torchvision.transforms as T
 import torchvision.transforms.functional as TF
