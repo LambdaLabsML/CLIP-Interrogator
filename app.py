@@ -29,7 +29,7 @@ blip_model.eval()
 blip_model = blip_model.to(device)
 
 print("Loading CLIP model...")
-clip_model_name = 'ViT-L/14'
+clip_model_name = 'ViT-L/14' # https://huggingface.co/openai/clip-vit-large-patch14
 clip_model, clip_preprocess = clip.load(clip_model_name, device=device)
 clip_model.to(device).eval()
 
@@ -241,5 +241,5 @@ io = gr.Interface(
     article=article, 
     examples=[['example01.jpg'], ['example02.jpg']]
 )
-io.queue(max_size=15)
+io.queue(max_size=32)
 io.launch()
