@@ -233,11 +233,13 @@ and check out more tools at my
 </p>
 """
 
-gr.Interface(
+io = gr.Interface(
     inference, 
     inputs, 
     outputs, 
     title=title, description=description, 
     article=article, 
     examples=[['example01.jpg'], ['example02.jpg']]
-).launch(enable_queue=True)
+)
+io.queue(max_size=15)
+io.launch()
