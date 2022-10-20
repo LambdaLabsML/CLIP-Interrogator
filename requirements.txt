@@ -1,9 +1,11 @@
+--extra-index-url https://download.pytorch.org/whl/cu113
+torch
+torchvision
+
 fairscale
 ftfy
 Pillow
 timm
-torch
-torchvision
 transformers==4.15.0
 -e git+https://github.com/openai/CLIP.git@main#egg=clip
 -e git+https://github.com/pharmapsychotic/BLIP.git@main#egg=blip
