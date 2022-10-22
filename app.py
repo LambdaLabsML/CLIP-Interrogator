@@ -226,6 +226,10 @@ from pixabay.com
 </p>
 
 <p>
+Server busy? You can also run on <a href="https://colab.research.google.com/github/pharmapsychotic/clip-interrogator/blob/main/clip_interrogator.ipynb">Google Colab</a>
+</p>
+
+<p>
 Has this been helpful to you? Follow me on twitter 
 <a href="https://twitter.com/pharmapsychotic">@pharmapsychotic</a> 
 and check out more tools at my
