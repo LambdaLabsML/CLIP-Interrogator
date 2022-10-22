@@ -246,4 +246,4 @@ io = gr.Interface(
     examples=[['example01.jpg'], ['example02.jpg']]
 )
 io.queue(max_size=32)
-io.launch()
+io.launch(show_api=False)
