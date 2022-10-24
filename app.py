@@ -216,8 +216,25 @@ def inference(image):
 inputs = [gr.inputs.Image(type='pil')]
 outputs = gr.outputs.Textbox(label="Output")
 
-title = "CLIP Interrogator"
-description = "Want to figure out what a good prompt might be to create new images like an existing one? The CLIP Interrogator is here to get you answers!"
+title = """
+    <div style="text-align: center; max-width: 650px; margin: 0 auto;">
+        <div
+        style="
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.75rem;
+        "
+        >
+        <h1 style="font-weight: 900; margin-bottom: 7px;">
+            CLIP Interrogator
+        </h1>
+        </div>
+        <p style="margin-bottom: 10px; font-size: 94%">
+        Want to figure out what a good prompt might be to create new images like an existing one? The CLIP Interrogator is here to get you answers!
+        </p>
+    </div>
+"""
 article = """
 <p>
 Example art by <a href="https://pixabay.com/illustrations/watercolour-painting-art-effect-4799014/">Layers</a> 
@@ -237,13 +254,25 @@ and check out more tools at my
 </p>
 """
 
-io = gr.Interface(
-    inference, 
-    inputs, 
-    outputs, 
-    title=title, description=description, 
-    article=article, 
-    examples=[['example01.jpg'], ['example02.jpg']]
-)
-io.queue(max_size=32)
-io.launch(show_api=False)
+css = '''
+#col-container {max-width: 700px; margin-left: auto; margin-right: auto;}
+a {text-decoration-line: underline; font-weight: 600;}
+'''
+
+with gr.Blocks(css=css) as block:
+    with gr.Column(elem_id="col-container"):
+        gr.HTML(title)
+
+        input_image = gr.inputs.Image(type='pil')
+        submit_btn = gr.Button("Submit")
+        output_text = gr.outputs.Textbox(label="Output")
+
+        examples=[['example01.jpg'], ['example02.jpg']]
+        ex = gr.Examples(examples=examples, fn=inference, inputs=input_image, outputs=output_text, cache_examples=True, run_on_click=True)
+        ex.dataset.headers = [""]
+        
+        gr.HTML(article)
+
+    submit_btn.click(fn=inference, inputs=input_image, outputs=output_text)
+
+block.queue(max_size=32).launch(show_api=False)
