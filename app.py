@@ -19,6 +19,8 @@ from torch import nn
 from torch.nn import functional as F
 from tqdm import tqdm
 
+from share_btn import community_icon_html, loading_icon_html, share_js
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 print("Loading BLIP model...")
@@ -211,10 +213,7 @@ trendings = LabelTable(trending_list, "trendings")
 
 
 def inference(image):
-    return interrogate(image)
-    
-inputs = [gr.inputs.Image(type='pil')]
-outputs = gr.outputs.Textbox(label="Output")
+    return interrogate(image), gr.update(visible=True), gr.update(visible=True), gr.update(visible=True)
 
 title = """
     <div style="text-align: center; max-width: 650px; margin: 0 auto;">
@@ -257,22 +256,52 @@ and check out more tools at my
 css = '''
 #col-container {max-width: 700px; margin-left: auto; margin-right: auto;}
 a {text-decoration-line: underline; font-weight: 600;}
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+#share-btn-container {
+    display: flex; padding-left: 0.5rem !important; padding-right: 0.5rem !important; background-color: #000000; justify-content: center; align-items: center; border-radius: 9999px !important; width: 13rem;
+}
+#share-btn {
+    all: initial; color: #ffffff;font-weight: 600; cursor:pointer; font-family: 'IBM Plex Sans', sans-serif; margin-left: 0.5rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important;
+}
+#share-btn * {
+    all: unset;
+}
+#share-btn-container div:nth-child(-n+2){
+    width: auto !important;
+    min-height: 0px !important;
+}
 '''
 
 with gr.Blocks(css=css) as block:
     with gr.Column(elem_id="col-container"):
         gr.HTML(title)
 
-        input_image = gr.inputs.Image(type='pil')
+        input_image = gr.Image(type='pil', elem_id="input-img")
         submit_btn = gr.Button("Submit")
-        output_text = gr.outputs.Textbox(label="Output")
+        output_text = gr.Textbox(label="Output", elem_id="output-txt")
+
+        with gr.Group(elem_id="share-btn-container"):
+            community_icon = gr.HTML(community_icon_html, visible=False)
+            loading_icon = gr.HTML(loading_icon_html, visible=False)
+            share_button = gr.Button("Share to community", elem_id="share-btn", visible=False)
 
         examples=[['example01.jpg'], ['example02.jpg']]
-        ex = gr.Examples(examples=examples, fn=inference, inputs=input_image, outputs=output_text, cache_examples=True, run_on_click=True)
+        ex = gr.Examples(examples=examples, fn=inference, inputs=input_image, outputs=[output_text, share_button, community_icon, loading_icon], cache_examples=True, run_on_click=True)
         ex.dataset.headers = [""]
         
         gr.HTML(article)
 
-    submit_btn.click(fn=inference, inputs=input_image, outputs=output_text)
+    submit_btn.click(fn=inference, inputs=input_image, outputs=[output_text, share_button, community_icon, loading_icon])
+    share_button.click(None, [], [], _js=share_js)
 
 block.queue(max_size=32).launch(show_api=False)
