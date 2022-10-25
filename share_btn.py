@@ -61,7 +61,7 @@ share_js = """async () => {
     const urlInputImg = await uploadFile(inputFile);
 
 	const descriptionMd = `#### Input img:
-<img src='${urlInputImg}'>
+<img src='${urlInputImg}' style='max-height: 350px;'>
 
 #### Caption:
 ${outputTxt}`;
