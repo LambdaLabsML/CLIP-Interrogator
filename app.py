@@ -280,7 +280,7 @@ a {text-decoration-line: underline; font-weight: 600;}
     width: auto !important;
     min-height: 0px !important;
 }
-#share-btn-container wrap {
+#share-btn-container .wrap {
     display: none !important;
 }
 '''
