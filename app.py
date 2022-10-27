@@ -235,22 +235,24 @@ title = """
     </div>
 """
 article = """
-<p>
-Example art by <a href="https://pixabay.com/illustrations/watercolour-painting-art-effect-4799014/">Layers</a> 
-and <a href="https://pixabay.com/illustrations/animal-painting-cat-feline-pet-7154059/">Lin Tong</a> 
-from pixabay.com
-</p>
+<div style="text-align: center; max-width: 650px; margin: 0 auto;">
+    <p>
+    Example art by <a href="https://pixabay.com/illustrations/watercolour-painting-art-effect-4799014/">Layers</a> 
+    and <a href="https://pixabay.com/illustrations/animal-painting-cat-feline-pet-7154059/">Lin Tong</a> 
+    from pixabay.com
+    </p>
 
-<p>
-Server busy? You can also run on <a href="https://colab.research.google.com/github/pharmapsychotic/clip-interrogator/blob/main/clip_interrogator.ipynb">Google Colab</a>
-</p>
+    <p>
+    Server busy? You can also run on <a href="https://colab.research.google.com/github/pharmapsychotic/clip-interrogator/blob/main/clip_interrogator.ipynb">Google Colab</a>
+    </p>
 
-<p>
-Has this been helpful to you? Follow me on twitter 
-<a href="https://twitter.com/pharmapsychotic">@pharmapsychotic</a> 
-and check out more tools at my
-<a href="https://pharmapsychotic.com/tools.html">Ai generative art tools list</a>
-</p>
+    <p>
+    Has this been helpful to you? Follow me on twitter 
+    <a href="https://twitter.com/pharmapsychotic">@pharmapsychotic</a> 
+    and check out more tools at my
+    <a href="https://pharmapsychotic.com/tools.html">Ai generative art tools list</a>
+    </p>
+</div>
 """
 
 css = '''
