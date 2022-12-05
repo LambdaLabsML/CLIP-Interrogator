@@ -26,12 +26,12 @@ for file in PREPROCESS_FILES:
     cache_path = os.path.dirname(path)
 
 
-# load BLIP and ViT-L 
+# load BLIP and ViT-L https://huggingface.co/openai/clip-vit-large-patch14
 config = Config(cache_path=cache_path, clip_model_path="cache", clip_model_name="ViT-L-14/openai")
 ci_vitl = Interrogator(config)
 ci_vitl.clip_model = ci_vitl.clip_model.to("cpu")
 
-# load ViT-H
+# load ViT-H https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K
 config.blip_model = ci_vitl.blip_model
 config.clip_model_name = "ViT-H-14/laion2b_s32b_b79k"
 ci_vith = Interrogator(config)
@@ -80,7 +80,7 @@ TITLE = """
         </h1>
         </div>
         <p style="margin-bottom: 10px; font-size: 94%">
-        Want to figure out what a good prompt might be to create new images like an existing one? The CLIP Interrogator is here to get you answers!
+        Want to figure out what a good prompt might be to create new images like an existing one?<br>The CLIP Interrogator is here to get you answers!
         </p>
     </div>
 """
@@ -99,7 +99,7 @@ ARTICLE = """
 
     <p>
     Has this been helpful to you? Follow me on twitter 
-    <a href="https://twitter.com/pharmapsychotic">@pharmapsychotic</a> 
+    <a href="https://twitter.com/pharmapsychotic">@pharmapsychotic</a><br>
     and check out more tools at my
     <a href="https://pharmapsychotic.com/tools.html">Ai generative art tools list</a>
     </p>
