@@ -176,7 +176,7 @@ def analyze_tab():
             movement = gr.Label(label="Movement", num_top_classes=5)
             trending = gr.Label(label="Trending", num_top_classes=5)
             flavor = gr.Label(label="Flavor", num_top_classes=5)
-    button = gr.Button("Analyze")
+    button = gr.Button("Analyze", api_name="image-analysis")
     button.click(image_analysis, inputs=[image, model], outputs=[medium, artist, movement, trending, flavor])
 
 with gr.Blocks(css=CSS) as block:
@@ -189,7 +189,7 @@ with gr.Blocks(css=CSS) as block:
                 with gr.Column():
                     input_model = gr.Dropdown(MODELS, value=MODELS[0], label='CLIP Model')
                     input_mode = gr.Radio(['best', 'fast', 'classic', 'negative'], value='best', label='Mode')
-            submit_btn = gr.Button("Submit")
+            submit_btn = gr.Button("Submit", api_name="image-to-prompt")
             output_text = gr.Textbox(label="Output", elem_id="output-txt")
 
             with gr.Group(elem_id="share-btn-container"):
