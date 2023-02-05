@@ -38,8 +38,36 @@ ci_vith = Interrogator(config)
 ci_vith.clip_model = ci_vith.clip_model.to("cpu")
 
 
-def inference(image, clip_model_name, mode):
+def image_analysis(image, clip_model_name):
+    # move selected model to GPU and other model to CPU
+    if clip_model_name == MODELS[0]:
+        ci_vith.clip_model = ci_vith.clip_model.to("cpu")
+        ci_vitl.clip_model = ci_vitl.clip_model.to(ci_vitl.device)
+        ci = ci_vitl
+    else:
+        ci_vitl.clip_model = ci_vitl.clip_model.to("cpu")
+        ci_vith.clip_model = ci_vith.clip_model.to(ci_vith.device)
+        ci = ci_vith
 
+    image = image.convert('RGB')
+    image_features = ci.image_to_features(image)
+
+    top_mediums = ci.mediums.rank(image_features, 5)
+    top_artists = ci.artists.rank(image_features, 5)
+    top_movements = ci.movements.rank(image_features, 5)
+    top_trendings = ci.trendings.rank(image_features, 5)
+    top_flavors = ci.flavors.rank(image_features, 5)
+
+    medium_ranks = {medium: sim for medium, sim in zip(top_mediums, ci.similarities(image_features, top_mediums))}
+    artist_ranks = {artist: sim for artist, sim in zip(top_artists, ci.similarities(image_features, top_artists))}
+    movement_ranks = {movement: sim for movement, sim in zip(top_movements, ci.similarities(image_features, top_movements))}
+    trending_ranks = {trending: sim for trending, sim in zip(top_trendings, ci.similarities(image_features, top_trendings))}
+    flavor_ranks = {flavor: sim for flavor, sim in zip(top_flavors, ci.similarities(image_features, top_flavors))}
+    
+    return medium_ranks, artist_ranks, movement_ranks, trending_ranks, flavor_ranks
+
+
+def image_to_prompt(image, clip_model_name, mode):
     # move selected model to GPU and other model to CPU
     if clip_model_name == MODELS[0]:
         ci_vith.clip_model = ci_vith.clip_model.to("cpu")
@@ -59,8 +87,10 @@ def inference(image, clip_model_name, mode):
         prompt = ci.interrogate(image)
     elif mode == 'classic':
         prompt = ci.interrogate_classic(image)
-    else:
+    elif mode == 'fast':
         prompt = ci.interrogate_fast(image)
+    elif mode == 'negative':
+        prompt = ci.interrogate_negative(image)
 
     return prompt, gr.update(visible=True), gr.update(visible=True), gr.update(visible=True)
 
@@ -135,39 +165,57 @@ a {text-decoration-line: underline; font-weight: 600;}
 }
 '''
 
+def analyze_tab():
+    with gr.Column():
+        with gr.Row():
+            image = gr.Image(type='pil', label="Image")
+            model = gr.Dropdown(MODELS, value=MODELS[0], label='CLIP Model')
+        with gr.Row():
+            medium = gr.Label(label="Medium", num_top_classes=5)
+            artist = gr.Label(label="Artist", num_top_classes=5)        
+            movement = gr.Label(label="Movement", num_top_classes=5)
+            trending = gr.Label(label="Trending", num_top_classes=5)
+            flavor = gr.Label(label="Flavor", num_top_classes=5)
+    button = gr.Button("Analyze")
+    button.click(image_analysis, inputs=[image, model], outputs=[medium, artist, movement, trending, flavor])
+
 with gr.Blocks(css=CSS) as block:
     with gr.Column(elem_id="col-container"):
         gr.HTML(TITLE)
 
-        input_image = gr.Image(type='pil', elem_id="input-img")
-        input_model = gr.Dropdown(MODELS, value=MODELS[0], label='CLIP Model')
-        input_mode = gr.Radio(['best', 'fast'], value='best', label='Mode')
-        submit_btn = gr.Button("Submit")
-        output_text = gr.Textbox(label="Output", elem_id="output-txt")
+        with gr.Tab("Prompt"):
+            input_image = gr.Image(type='pil', elem_id="input-img")
+            input_model = gr.Dropdown(MODELS, value=MODELS[0], label='CLIP Model')
+            input_mode = gr.Radio(['best', 'fast', 'classic', 'negative'], value='best', label='Mode')
+            submit_btn = gr.Button("Submit")
+            output_text = gr.Textbox(label="Output", elem_id="output-txt")
 
-        with gr.Group(elem_id="share-btn-container"):
-            community_icon = gr.HTML(community_icon_html, visible=False)
-            loading_icon = gr.HTML(loading_icon_html, visible=False)
-            share_button = gr.Button("Share to community", elem_id="share-btn", visible=False)
+            with gr.Group(elem_id="share-btn-container"):
+                community_icon = gr.HTML(community_icon_html, visible=False)
+                loading_icon = gr.HTML(loading_icon_html, visible=False)
+                share_button = gr.Button("Share to community", elem_id="share-btn", visible=False)
 
-        examples=[['example01.jpg', MODELS[0], 'best'], ['example02.jpg', MODELS[0], 'best']]
-        ex = gr.Examples(
-            examples=examples, 
-            fn=inference, 
-            inputs=[input_image, input_model, input_mode], 
-            outputs=[output_text, share_button, community_icon, loading_icon], 
-            cache_examples=True, 
-            run_on_click=True
-        )
-        ex.dataset.headers = [""]
+            examples=[['example01.jpg', MODELS[0], 'best'], ['example02.jpg', MODELS[0], 'best']]
+            ex = gr.Examples(
+                examples=examples, 
+                fn=image_to_prompt, 
+                inputs=[input_image, input_model, input_mode], 
+                outputs=[output_text, share_button, community_icon, loading_icon], 
+                cache_examples=True, 
+                run_on_click=True
+            )
+            ex.dataset.headers = [""]
+
+        with gr.Tab("Analyze"):
+            analyze_tab()
         
         gr.HTML(ARTICLE)
 
     submit_btn.click(
-        fn=inference, 
+        fn=image_to_prompt, 
         inputs=[input_image, input_model, input_mode], 
         outputs=[output_text, share_button, community_icon, loading_icon]
     )
     share_button.click(None, [], [], _js=share_js)
 
-block.queue(max_size=32).launch(show_api=False)
+block.queue(max_size=64).launch(show_api=False)

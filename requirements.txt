@@ -9,5 +9,6 @@ Pillow
 timm
 transformers==4.15.0
 open_clip_torch
-clip-interrogator==0.3.1
+requests
+clip-interrogator==0.4.1
 -e git+https://github.com/pharmapsychotic/BLIP.git@lib#egg=blip
