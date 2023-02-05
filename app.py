@@ -137,33 +137,33 @@ ARTICLE = """
 </div>
 """
 
-CSS = '''
-#col-container {max-width: 700px; margin-left: auto; margin-right: auto;}
-a {text-decoration-line: underline; font-weight: 600;}
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-#share-btn-container {
-    display: flex; padding-left: 0.5rem !important; padding-right: 0.5rem !important; background-color: #000000; justify-content: center; align-items: center; border-radius: 9999px !important; width: 13rem;
-}
-#share-btn {
-    all: initial; color: #ffffff;font-weight: 600; cursor:pointer; font-family: 'IBM Plex Sans', sans-serif; margin-left: 0.5rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important;
-}
-#share-btn * {
-    all: unset;
-}
-#share-btn-container div:nth-child(-n+2){
-    width: auto !important;
-    min-height: 0px !important;
-}
-#share-btn-container .wrap {
-    display: none !important;
-}
-'''
+CSS = """
+    #col-container {margin-left: auto; margin-right: auto;}
+    a {text-decoration-line: underline; font-weight: 600;}
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    #share-btn-container {
+        display: flex; padding-left: 0.5rem !important; padding-right: 0.5rem !important; background-color: #000000; justify-content: center; align-items: center; border-radius: 9999px !important; width: 13rem;
+    }
+    #share-btn {
+        all: initial; color: #ffffff;font-weight: 600; cursor:pointer; font-family: 'IBM Plex Sans', sans-serif; margin-left: 0.5rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important;
+    }
+    #share-btn * {
+        all: unset;
+    }
+    #share-btn-container div:nth-child(-n+2){
+        width: auto !important;
+        min-height: 0px !important;
+    }
+    #share-btn-container .wrap {
+        display: none !important;
+    }
+"""
 
 def analyze_tab():
     with gr.Column():
@@ -184,9 +184,11 @@ with gr.Blocks(css=CSS) as block:
         gr.HTML(TITLE)
 
         with gr.Tab("Prompt"):
-            input_image = gr.Image(type='pil', elem_id="input-img")
-            input_model = gr.Dropdown(MODELS, value=MODELS[0], label='CLIP Model')
-            input_mode = gr.Radio(['best', 'fast', 'classic', 'negative'], value='best', label='Mode')
+            with gr.Row():
+                input_image = gr.Image(type='pil', elem_id="input-img")
+                with gr.Column():
+                    input_model = gr.Dropdown(MODELS, value=MODELS[0], label='CLIP Model')
+                    input_mode = gr.Radio(['best', 'fast', 'classic', 'negative'], value='best', label='Mode')
             submit_btn = gr.Button("Submit")
             output_text = gr.Textbox(label="Output", elem_id="output-txt")
 
