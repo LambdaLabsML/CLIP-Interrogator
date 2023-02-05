@@ -176,6 +176,18 @@ def analyze_tab():
             movement = gr.Label(label="Movement", num_top_classes=5)
             trending = gr.Label(label="Trending", num_top_classes=5)
             flavor = gr.Label(label="Flavor", num_top_classes=5)
+
+    examples=[['example01.jpg', MODELS[0]], ['example02.jpg', MODELS[0]]]
+    ex = gr.Examples(
+        examples=examples, 
+        fn=image_analysis, 
+        inputs=[input_image, input_model], 
+        outputs=[medium, artist, movement, trending, flavor], 
+        cache_examples=True, 
+        run_on_click=True
+    )
+    ex.dataset.headers = [""]
+
     button = gr.Button("Analyze", api_name="image-analysis")
     button.click(image_analysis, inputs=[image, model], outputs=[medium, artist, movement, trending, flavor])
 
@@ -220,4 +232,4 @@ with gr.Blocks(css=CSS) as block:
     )
     share_button.click(None, [], [], _js=share_js)
 
-block.queue(max_size=64).launch(show_api=False)
+block.queue(max_size=64, concurrency_count=2).launch(show_api=False)
