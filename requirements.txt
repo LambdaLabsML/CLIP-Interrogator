@@ -12,6 +12,7 @@ open_clip_torch
 requests
 clip-interrogator==0.4.3
 
+fsspec==2023.1.0
 gradio==3.5
 ray[serve]==2.2.0
 fastapi==0.88.0
