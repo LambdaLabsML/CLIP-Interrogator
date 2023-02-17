@@ -290,8 +290,8 @@ with gr.Blocks(css=CSS) as block:
     share_button.click(None, [], [], _js=share_js)
 
 # without rayserve
-demo.queue(concurrency_count=1, max_size=4)
-demo.launch(server_port=8266)
+block.queue(concurrency_count=1, max_size=4)
+block.launch(server_port=8266)
 
 # # With rayserve
 # num_replicas = (
