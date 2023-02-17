@@ -290,14 +290,15 @@ with gr.Blocks(css=CSS) as block:
     share_button.click(None, [], [], _js=share_js)
 
 # without rayserve
-# block.queue(max_size=64).launch(show_api=False)
+demo.queue(concurrency_count=1, max_size=4)
+demo.launch(server_port=8266)
 
-# With rayserve
-num_replicas = (
-    os.getenv("DEMO_NUM_REPLICAS")
-    if "DEMO_NUM_REPLICAS" in os.environ
-    else torch.cuda.device_count()
-)
-app = GradioServer.options(
-    num_replicas=num_replicas, ray_actor_options={"num_gpus": 1.0, "num_cpus": 16.0}
-).bind(block)
+# # With rayserve
+# num_replicas = (
+#     os.getenv("DEMO_NUM_REPLICAS")
+#     if "DEMO_NUM_REPLICAS" in os.environ
+#     else torch.cuda.device_count()
+# )
+# app = GradioServer.options(
+#     num_replicas=num_replicas, ray_actor_options={"num_gpus": 1.0, "num_cpus": 16.0}
+# ).bind(block)
